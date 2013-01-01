@@ -23,6 +23,12 @@ public:
     int capacity() const {
         return this->bucket_count();
     }
+    typename Container::const_iterator constBegin() const {
+        return this->begin();
+    }
+    typename Container::const_iterator constEnd() const {
+        return this->end();
+    }
     typename Container::iterator insert(const Key &key, const T &value) {
         typename Container::value_type v = std::make_pair<const Key, T>(key, value);
         std::pair<typename Container::iterator, bool> res = Container::insert(v);
