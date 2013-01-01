@@ -20,8 +20,10 @@ template <class Container, class Key, class T>
 class QGoogleHash: public Container
 {
 public:
-    void insert(const Key &key, const T &value) {
-        (*this)[key] = value;
+    typename Container::iterator insert(const Key &key, const T &value) {
+        typename Container::value_type v = std::make_pair<const Key, T>(key, value);
+        std::pair<typename Container::iterator, bool> res = Container::insert(v);
+        return res.first;
     }
     T value(const Key &key) const {
         typename Container::const_iterator i;
