@@ -49,6 +49,19 @@ public:
     bool isEmpty() const {
         return this->empty()
     }
+    const Key key(const T &value) const {
+        return this->key(value, Key());
+    }
+    const Key key(const T &value, const Key &defaultKey) const {
+        typename Container::const_iterator it = this->begin();
+        while (it != this->end()) {
+            if (value == it->second()) {
+                return it->first;
+            }
+        }
+
+        return defaultKey;
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
