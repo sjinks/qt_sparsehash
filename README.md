@@ -9,11 +9,11 @@ The wrapper itself is a single C++ header file (qsparsehash.h). Just include it 
 
 **Compatibility**
 
-QSparseHash is tested with Qt 4.8 and sparsehash 1.10/2.0.2. It may work with older versions, but I've not tested it.
+QSparseHash is tested with Qt 4.8 and sparsehash 1.10/2.0.2. It may work with older versions, but I have not tested it.
 
 **How to use**
 
-QSparseHash class derives sparse_hash_map (QDenseHash derives dense_hash_map), so it's 100% API compatible with original Google implementation. But it also has some methods to be partially compatible with QHash (to be used as a drop-in QHash replacement). Also keep in mind that QSparseHash has QHash-incompatible iterators, there's a bit different syntax (see example below).
+QSparseHash class derives from sparse_hash_map (QDenseHash derives dense_hash_map), so it's 100% API compatible with the original Google implementation. But it also has some methods to be partially compatible with QHash (to be used as a drop-in QHash replacement). Also keep in mind that QSparseHash has QHash-incompatible iterators, there's a bit different syntax (see example below).
 
 **Examples**
 
@@ -30,7 +30,7 @@ Creating, inserting and removing values:
     hash.remove("foo");
     printf("count: %d\n", hash.count());
     
-Iterating over hash:
+Iterating over the hash:
 
     QSparseHash<QString, int> hash;
     hash.insert("foo", 1);
@@ -41,7 +41,7 @@ Iterating over hash:
         i++;
     }
     
-Does hash contain a key?
+Does the hash contain a key?
 
     QSparseHash<QString, int> hash;
     hash.insert("foo", 1);
