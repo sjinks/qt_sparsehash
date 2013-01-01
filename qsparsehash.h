@@ -32,6 +32,12 @@ public:
     typename Container::const_iterator constFind(const Key &key) const {
         return this->find(key);
     }
+    bool contains(const Key &key) const {
+        return (this->find(key) != this->end());
+    }
+    int count() const {
+        return this->size();
+    }
     typename Container::iterator insert(const Key &key, const T &value) {
         typename Container::value_type v = std::make_pair<const Key, T>(key, value);
         std::pair<typename Container::iterator, bool> res = Container::insert(v);
@@ -44,12 +50,6 @@ public:
             return i->second;
         else
             return T();
-    }
-    bool contains(const Key &key) const {
-        return (this->find(key) != this->end());
-    }
-    int count() const {
-        return this->size();
     }
     void print() const {
         typename Container::const_iterator i = this->begin();
