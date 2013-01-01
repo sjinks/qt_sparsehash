@@ -43,7 +43,7 @@ public:
         typename Container::const_iterator i = this->begin();
         while (i != this->end()) {
             qDebug() << "key: " << i->first << " value: " << i->second;
-            i++;
+            ++i;
         }
     }
     void remove(const Key &key) {
@@ -77,7 +77,7 @@ QDataStream & operator<< ( QDataStream & out, const QSparseHash<Key, T> & hash )
     typename QSparseHash<Key, T>::const_iterator i = hash.begin();
     while (i != hash.end()) {
         out << i->first << i->second;
-        i++;
+        ++i;
     }
     return out;
 }
@@ -102,7 +102,7 @@ QDataStream & operator<< ( QDataStream & out, const QDenseHash<Key, T> & hash ) 
     typename QDenseHash<Key, T>::const_iterator i = hash.begin();
     while (i != hash.end()) {
         out << i->first << i->second;
-        i++;
+        ++i;
     }
     return out;
 }
