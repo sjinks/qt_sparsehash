@@ -13,38 +13,6 @@
  */
 
 
-/* stl-compatible qHash wrappers for some basic Qt datatypes
- * It's easy to implement a new one if you need to store custom datatype.
- */
-namespace std {
-namespace tr1 {
-template <>
-class hash<QByteArray> {
-public:
-    size_t operator()(const QByteArray &k) const {
-        return qHash(k);
-    }
-};
-
-template <>
-class hash<QChar> {
-public:
-    size_t operator()(const QChar &k) const {
-        return qHash(k);
-    }
-};
-
-template <>
-class hash<QString> {
-public:
-    size_t operator()(const QString &k) const {
-        return qHash(k);
-    }
-};
-
-}
-}
-
 /*
  *Basic hash wrapper which maintains partial compatibility with QHash
  */
@@ -87,10 +55,10 @@ public:
 /* typedef-like class definition for QSparseHash as a wrapper to google::sparse_hash_map
  */
 template <class Key, class T>
-class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T>, Key, T> {};
+class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T, qHash>, Key, T> {};
 
 template <class Key, class T>
-class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T>, Key, T> {};
+class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T, qHash>, Key, T> {};
 
 /* Serialization and deserialization routines
  */
