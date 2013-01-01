@@ -35,6 +35,9 @@ public:
     bool contains(const Key &key) const {
         return (this->find(key) != this->end());
     }
+    int count(const Key &key) const {
+        return static_cast<int>(Container::count(key));
+    }
     int count() const {
         return this->size();
     }
