@@ -29,6 +29,9 @@ public:
     typename Container::const_iterator constEnd() const {
         return this->end();
     }
+    typename Container::const_iterator constFind(const Key &key) const {
+        return this->find(key);
+    }
     typename Container::iterator insert(const Key &key, const T &value) {
         typename Container::value_type v = std::make_pair<const Key, T>(key, value);
         std::pair<typename Container::iterator, bool> res = Container::insert(v);
