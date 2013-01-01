@@ -20,6 +20,9 @@ template <class Container, class Key, class T>
 class QGoogleHash: public Container
 {
 public:
+    int capacity() const {
+        return this->bucket_count();
+    }
     typename Container::iterator insert(const Key &key, const T &value) {
         typename Container::value_type v = std::make_pair<const Key, T>(key, value);
         std::pair<typename Container::iterator, bool> res = Container::insert(v);
