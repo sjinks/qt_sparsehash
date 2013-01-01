@@ -52,13 +52,20 @@ public:
     }
 };
 
+template <typename T>
+class Q_DECL_HIDDEN qHashWrapper {
+    uint operator()(const T &v) {
+        return qHash<T>(v);
+    }
+}
+
 /* typedef-like class definition for QSparseHash as a wrapper to google::sparse_hash_map
  */
 template <class Key, class T>
-class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T, qHash>, Key, T> {};
+class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T, qHashWrapper<T> >, Key, T> {};
 
 template <class Key, class T>
-class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T, qHash>, Key, T> {};
+class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T, qHashWrapper<T> >, Key, T> {};
 
 /* Serialization and deserialization routines
  */
