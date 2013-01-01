@@ -46,6 +46,9 @@ public:
         std::pair<typename Container::iterator, bool> res = Container::insert(v);
         return res.first;
     }
+    bool isEmpty() const {
+        return this->empty()
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
