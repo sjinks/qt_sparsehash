@@ -39,7 +39,7 @@ public:
         return static_cast<int>(Container::count(key));
     }
     int count() const {
-        return this->size();
+        return static_cast<int>(this->size());
     }
     typename Container::iterator insert(const Key &key, const T &value) {
         typename Container::value_type v = std::make_pair<const Key, T>(key, value);
