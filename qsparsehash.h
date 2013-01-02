@@ -47,7 +47,7 @@ public:
         return res.first;
     }
     bool isEmpty() const {
-        return this->empty()
+        return this->empty();
     }
     const Key key(const T &value) const {
         return this->key(value, Key());
@@ -157,7 +157,7 @@ class Q_DECL_HIDDEN qHashWrapper {
     uint operator()(const T &v) {
         return qHash<T>(v);
     }
-}
+};
 
 /* typedef-like class definition for QSparseHash as a wrapper to google::sparse_hash_map
  */
