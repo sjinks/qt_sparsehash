@@ -135,11 +135,7 @@ public:
         return result;
     }
     void print() const {
-        typename Container::const_iterator i = this->begin();
-        while (i != this->end()) {
-            qDebug() << "key: " << i->first << " value: " << i->second;
-            ++i;
-        }
+        qDebug() << this;
     }
 };
 
