@@ -111,6 +111,25 @@ public:
         typename Container::iterator it = this->find(key);
         return (it == this->end()) ? defaultValue : it->second;
     }
+    QList<T> values() const {
+        QList<T> result;
+        typename Container::const_iterator it = this->begin();
+        while (it != this->end()) {
+            result.append(it->second);
+            ++it;
+        }
+
+        return result;
+    }
+    QList<T> values(const Key &key) const {
+        QList<T> result;
+        typename Container::iterator it = this->find(key);
+        if (it != this->end()) {
+            result.append(it->second());
+        }
+
+        return result;
+    }
     void print() const {
         typename Container::const_iterator i = this->begin();
         while (i != this->end()) {
