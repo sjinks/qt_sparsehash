@@ -62,6 +62,26 @@ public:
 
         return defaultKey;
     }
+    QList<Key> keys() const {
+        QList<Key> result;
+        typename Container::const_iterator it = this->begin();
+        if (it != this->end()) {
+            result.append(it->first());
+        }
+
+        return result;
+    }
+    QList<Key> keys(const T &value) const {
+        QList<Key> result;
+        typename Container::const_iterator it = this->begin();
+        while (it != this->end()) {
+            if (value == it->second()) {
+                result.append(it->first());
+            }
+        }
+
+        return result;
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
