@@ -91,6 +91,16 @@ public:
     void squeeze() {
         // there's nothing to squeeze
     }
+    T take(const Key &key) {
+        typename Container::iterator it = this->find(key);
+        if (it == this->end()) {
+            return T();
+        }
+
+        T result = it->second;
+        this->erase(it);
+        return result;
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
