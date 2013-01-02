@@ -104,13 +104,12 @@ public:
     QList<Key> uniqueKeys() const {
         return this->keys();
     }
-    T value(const Key &key) const {
-        typename Container::const_iterator i;
-        i = this->find(key);
-        if (i != this->end())
-            return i->second;
-        else
-            return T();
+    const T value(const Key &key) const {
+        return this->value(key, T());
+    }
+    const T value(const Key &key, const T &defaultValue) const {
+        typename Container::iterator it = this->find(key);
+        return (it == this->end()) ? defaultValue : it->second;
     }
     void print() const {
         typename Container::const_iterator i = this->begin();
