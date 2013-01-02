@@ -12,7 +12,7 @@ script:
   - cd ../tests
   - qmake
   - make
-  - for i in ./tst_*l; do ./$i; done
+  - for i in ./tst_*; do ./$i; done
 
 notifications:
   email: false
