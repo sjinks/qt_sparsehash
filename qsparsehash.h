@@ -85,6 +85,9 @@ public:
     int remove(const Key &key) {
         return static_cast<int>(this->erase(key));
     }
+    void reserve(int size) {
+        this->resize(size);
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
