@@ -380,11 +380,11 @@ class DenseHashMap : public google::dense_hash_map<Key, T, H>, public QSharedDat
 
 /* typedef-like class definition for QSparseHash as a wrapper to google::sparse_hash_map
  */
-template <class Key, class T>
-class QSparseHash: public QGoogleHash<SparseHashMap<Key, T, qHashWrapper<Key> >, Key, T> {};
+template<typename Key, typename T, typename H = qHashWrapper<Key> >
+class QSparseHash: public QGoogleHash<SparseHashMap<Key, T, H>, Key, T> {};
 
-template <class Key, class T>
-class QDenseHash: public QGoogleHash<DenseHashMap<Key, T, qHashWrapper<Key> >, Key, T> {};
+template<typename Key, typename T, typename H = qHashWrapper<Key> >
+class QDenseHash: public QGoogleHash<DenseHashMap<Key, T, H>, Key, T> {};
 
 Q_DECLARE_ASSOCIATIVE_ITERATOR(SparseHash)
 Q_DECLARE_MUTABLE_ASSOCIATIVE_ITERATOR(SparseHash)
@@ -394,53 +394,30 @@ Q_DECLARE_MUTABLE_ASSOCIATIVE_ITERATOR(DenseHash)
 
 /* Serialization and deserialization routines
  */
-template <class Key, class T>
-QDataStream & operator<< ( QDataStream & out, const QSparseHash<Key, T> & hash ) {
+template<typename Container, typename Key, typename T>
+QDataStream& operator<< (QDataStream& out, const QGoogleHash<Container, Key, T>& hash)
+{
     out << hash.count();
-    typename QSparseHash<Key, T>::const_iterator i = hash.begin();
+    typename QGoogleHash<Container, Key, T>::const_iterator i = hash.begin();
     while (i != hash.end()) {
-        out << i->first << i->second;
+        out << i.key() << i.value();
         ++i;
     }
+
     return out;
 }
 
-template <class Key, class T>
-QDataStream & operator>> ( QDataStream & in, QSparseHash<Key, T> & hash ) {
+template<typename Container, typename Key, typename T>
+QDataStream& operator>>(QDataStream& in, QGoogleHash<Container, Key, T>& hash) {
     int size;
     in >> size;
     for (int i=0; i<size; ++i) {
         Key key;
         T value;
-        in >> key;
-        in >> value;
+        in >> key >> value;
         hash.insert(key, value);
     }
-    return in;
-}
 
-template <class Key, class T>
-QDataStream & operator<< ( QDataStream & out, const QDenseHash<Key, T> & hash ) {
-    out << hash.count();
-    typename QDenseHash<Key, T>::const_iterator i = hash.begin();
-    while (i != hash.end()) {
-        out << i->first << i->second;
-        ++i;
-    }
-    return out;
-}
-
-template <class Key, class T>
-QDataStream & operator>> ( QDataStream & in, QDenseHash<Key, T> & hash ) {
-    int size;
-    in >> size;
-    for (int i=0; i<size; ++i) {
-        Key key;
-        T value;
-        in >> key;
-        in >> value;
-        hash.insert(key, value);
-    }
     return in;
 }
 
