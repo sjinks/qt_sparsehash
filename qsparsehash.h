@@ -274,7 +274,7 @@ public:
 
     iterator erase(iterator pos)
     {
-        iterator next = ++pos;
+        iterator next = pos+1;
         this->d->erase(pos.m_it);
         return next;
     }
