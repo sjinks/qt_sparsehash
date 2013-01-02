@@ -154,6 +154,7 @@ QDebug operator<<(QDebug dbg, const QGoogleHash<Container, Key, T>& ctr)
 
 template <typename T>
 class Q_DECL_HIDDEN qHashWrapper {
+public:
     uint operator()(const T &v) {
         return qHash<T>(v);
     }
