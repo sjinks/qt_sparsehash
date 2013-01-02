@@ -103,9 +103,6 @@ public:
             ++i;
         }
     }
-    void remove(const Key &key) {
-        this->erase(key);
-    }
     void squeeze() {
         // there's nothing to squeeze
     }
