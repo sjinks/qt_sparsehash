@@ -19,6 +19,7 @@ template<typename Container, typename Key, typename T>
 class QGoogleHash {
     QSharedDataPointer<Container> d;
 public:
+<<<<<<< HEAD
     QGoogleHash(void) : d(new Container()) {}
     QGoogleHash(const QGoogleHash<Container, Key, T>& other) : d(other.d) {}
     QGoogleHash<Container, Key, T>& operator=(const QGoogleHash<Container, Key, T>& other)
@@ -28,6 +29,25 @@ public:
         }
 
         return *this;
+=======
+    int capacity() const {
+        return static_cast<int>(this->bucket_count());
+    }
+    typename Container::const_iterator constBegin() const {
+        return this->begin();
+    }
+    typename Container::const_iterator constEnd() const {
+        return this->end();
+    }
+    typename Container::const_iterator constFind(const Key &key) const {
+        return this->find(key);
+    }
+    bool contains(const Key &key) const {
+        return (this->find(key) != this->end());
+    }
+    int count(const Key &key) const {
+        return static_cast<int>(Container::count(key));
+>>>>>>> 39086bca6b330f3f3520bfedf236ebc73799591a
     }
 
     void swap(QGoogleHash<Container, Key, T>& other)
@@ -240,9 +260,15 @@ public:
     QList<Key> keys() const
     {
         QList<Key> result;
+<<<<<<< HEAD
         typename Container::const_iterator it = this->d->begin();
         while (it != this->d->end()) {
             result.append(it->first);
+=======
+        typename Container::const_iterator it = this->begin();
+        while (it != this->end()) {
+            result.append(it->first());
+>>>>>>> 39086bca6b330f3f3520bfedf236ebc73799591a
             ++it;
         }
 
@@ -315,9 +341,15 @@ public:
     QList<T> values(const Key& key) const
     {
         QList<T> result;
+<<<<<<< HEAD
         typename Container::const_iterator it = Container::find(key);
         if (it != Container::end()) {
             result.append(it->second);
+=======
+        typename Container::const_iterator it = this->find(key);
+        if (it != this->end()) {
+            result.append(it->second());
+>>>>>>> 39086bca6b330f3f3520bfedf236ebc73799591a
         }
 
         return result;
@@ -354,11 +386,17 @@ QDebug operator<<(QDebug dbg, const QGoogleHash<Container, Key, T>& ctr)
     return dbg.space();
 }
 
+<<<<<<< HEAD
 template<typename T>
 class qHashWrapper {
 public:
     uint operator()(const T& v) const
     {
+=======
+template <typename T>
+class Q_DECL_HIDDEN qHashWrapper {
+    uint operator()(const T &v) {
+>>>>>>> 39086bca6b330f3f3520bfedf236ebc73799591a
         return qHash(v);
     }
 };
@@ -372,6 +410,7 @@ class DenseHashMap : public google::dense_hash_map<Key, T, H>, public QSharedDat
 /* typedef-like class definition for QSparseHash as a wrapper to google::sparse_hash_map
  */
 template <class Key, class T>
+<<<<<<< HEAD
 class QSparseHash: public QGoogleHash<SparseHashMap<Key, T, qHashWrapper<Key> >, Key, T> {};
 
 template <class Key, class T>
@@ -382,6 +421,12 @@ Q_DECLARE_MUTABLE_ASSOCIATIVE_ITERATOR(SparseHash)
 Q_DECLARE_ASSOCIATIVE_ITERATOR(DenseHash)
 Q_DECLARE_MUTABLE_ASSOCIATIVE_ITERATOR(DenseHash)
 
+=======
+class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T, qHashWrapper<Key> >, Key, T> {};
+
+template <class Key, class T>
+class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T, qHashWrapper<Key> >, Key, T> {};
+>>>>>>> 39086bca6b330f3f3520bfedf236ebc73799591a
 
 /* Serialization and deserialization routines
  */
