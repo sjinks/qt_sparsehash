@@ -143,6 +143,19 @@ public:
     }
 };
 
+template <class Container, class Key, class T>
+QDebug operator<<(QDebug dbg, const QGoogleHash<Container, Key, T>& ctr)
+{
+    dbg.nospace();
+    typename Container::const_iterator it = ctr.begin();
+    while (it != ctr.end()) {
+        dbg << "key: " << it->first << ", value: " << it->second << '\n';
+        ++it;
+    }
+
+    return dbg.space();
+}
+
 template <typename T>
 class Q_DECL_HIDDEN qHashWrapper {
     uint operator()(const T &v) {
