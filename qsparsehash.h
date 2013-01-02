@@ -63,7 +63,8 @@ public:
         {
             typename Container::iterator b = this->m_c->begin();
             difference_type dist = std::distance(b, this->m_it) - 1;
-            std::advance(b, dist);
+            this->m_it = b;
+            std::advance(this->m_it, dist);
             return *this;
         }
 
@@ -84,13 +85,15 @@ public:
 
             return this->operator-(-j);
         }
+
         iterator operator-(int j) const
         {
             if (j > 0) {
                 iterator r = *this;
-                typename Container::iterator b = this->m_c->begin();
-                difference_type dist = std::distance(b, this->m_it) + j;
-                std::advance(b, dist);
+                typename Container::iterator b = r.m_c->begin();
+                difference_type dist = std::distance(b, r.m_it) - j;
+                r.m_it = b;
+                std::advance(r.m_it, dist);
                 return r;
             }
 
@@ -129,7 +132,8 @@ public:
         {
             typename Container::const_iterator b = this->m_c->begin();
             difference_type dist = std::distance(b, this->m_it) - 1;
-            std::advance(b, dist);
+            this->m_it = b;
+            std::advance(this->m_it, dist);
             return *this;
         }
 
@@ -155,9 +159,10 @@ public:
         {
             if (j > 0) {
                 const_iterator r = *this;
-                typename Container::const_iterator b = this->m_c->begin();
-                difference_type dist = std::distance(b, this->m_it) + j;
-                std::advance(b, dist);
+                typename Container::const_iterator b = r.m_c->begin();
+                difference_type dist = std::distance(b, r.m_it) - j;
+                r.m_it = b;
+                std::advance(r.m_it, dist);
                 return r;
             }
 
@@ -210,7 +215,7 @@ public:
     {
         typename Container::value_type v = std::make_pair<const Key, T>(key, value);
         std::pair<typename Container::iterator, bool> res = this->d->insert(v);
-        if (res.second) {
+        if (!res.second) {
             res.first->second = value;
         }
 
@@ -219,6 +224,7 @@ public:
 
     iterator insertMulti(const Key& key, const T& value)
     {
+        qWarning("insert_multi() is not supported");
         return this->insert(key, value);
     }
 
@@ -339,14 +345,17 @@ public:
     {
         this->d->clear_deleted_key();
     }
+
+    template<class C, class K, class U>
+    friend QDebug operator<<(QDebug dbg, const QGoogleHash<C, K, U>& ctr);
 };
 
 template<class Container, class Key, class T>
 QDebug operator<<(QDebug dbg, const QGoogleHash<Container, Key, T>& ctr)
 {
     dbg.nospace();
-    typename Container::const_iterator it = ctr.begin();
-    while (it != ctr.end()) {
+    typename Container::const_iterator it = ctr.d->begin();
+    while (it != ctr.d->end()) {
         dbg << "key: " << it->first << ", value: " << it->second << '\n';
         ++it;
     }
