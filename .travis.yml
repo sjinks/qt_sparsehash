@@ -1,0 +1,18 @@
+install:
+  - sudo apt-get update
+  - sudo apt-get install libqt4-dev subversion
+
+script:
+  - svn checkout http://sparsehash.googlecode.com/svn/trunk sparsehash-read-only
+  - cd sparsehash-read-only
+  - ./configure
+  - make
+  - cp -R src/sparsehash ../
+  - cp -R src/google ../
+  - cd ../tests
+  - qmake
+  - make
+  - for i in ./tst_*l; do ./$i; done
+
+notifications:
+  email: false
