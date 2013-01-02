@@ -21,7 +21,7 @@ class QGoogleHash: public Container
 {
 public:
     int capacity() const {
-        return this->bucket_count();
+        return static_cast<int>(this->bucket_count());
     }
     typename Container::const_iterator constBegin() const {
         return this->begin();
@@ -58,6 +58,8 @@ public:
             if (value == it->second()) {
                 return it->first;
             }
+
+            ++it;
         }
 
         return defaultKey;
@@ -65,8 +67,9 @@ public:
     QList<Key> keys() const {
         QList<Key> result;
         typename Container::const_iterator it = this->begin();
-        if (it != this->end()) {
+        while (it != this->end()) {
             result.append(it->first());
+            ++it;
         }
 
         return result;
@@ -78,6 +81,8 @@ public:
             if (value == it->second()) {
                 result.append(it->first());
             }
+
+            ++it;
         }
 
         return result;
@@ -127,7 +132,7 @@ public:
     }
     QList<T> values(const Key &key) const {
         QList<T> result;
-        typename Container::iterator it = this->find(key);
+        typename Container::const_iterator it = this->find(key);
         if (it != this->end()) {
             result.append(it->second());
         }
@@ -155,17 +160,17 @@ QDebug operator<<(QDebug dbg, const QGoogleHash<Container, Key, T>& ctr)
 template <typename T>
 class Q_DECL_HIDDEN qHashWrapper {
     uint operator()(const T &v) {
-        return qHash<T>(v);
+        return qHash(v);
     }
 };
 
 /* typedef-like class definition for QSparseHash as a wrapper to google::sparse_hash_map
  */
 template <class Key, class T>
-class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T, qHashWrapper<T> >, Key, T> {};
+class QSparseHash: public QGoogleHash<google::sparse_hash_map<Key, T, qHashWrapper<Key> >, Key, T> {};
 
 template <class Key, class T>
-class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T, qHashWrapper<T> >, Key, T> {};
+class QDenseHash: public QGoogleHash<google::dense_hash_map<Key, T, qHashWrapper<Key> >, Key, T> {};
 
 /* Serialization and deserialization routines
  */
