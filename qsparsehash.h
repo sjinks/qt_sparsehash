@@ -104,6 +104,10 @@ public:
     QList<Key> uniqueKeys() const {
         return this->keys();
     }
+    QGoogleHash<Container, Key, T> &unite(const QGoogleHash<Container, Key, T> &other) {
+        this->insert(other.begin(), other.end());
+        return *this;
+    }
     const T value(const Key &key) const {
         return this->value(key, T());
     }
