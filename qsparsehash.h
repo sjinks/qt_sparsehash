@@ -101,6 +101,9 @@ public:
         this->erase(it);
         return result;
     }
+    QList<Key> uniqueKeys() const {
+        return this->keys();
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
