@@ -88,6 +88,9 @@ public:
     void reserve(int size) {
         this->resize(size);
     }
+    void squeeze() {
+        // there's nothing to squeeze
+    }
     T value(const Key &key) const {
         typename Container::const_iterator i;
         i = this->find(key);
@@ -102,9 +105,6 @@ public:
             qDebug() << "key: " << i->first << " value: " << i->second;
             ++i;
         }
-    }
-    void squeeze() {
-        // there's nothing to squeeze
     }
 };
 
