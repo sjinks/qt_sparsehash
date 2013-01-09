@@ -1,70 +1,103 @@
 # QSparseHash [![Build Status](https://travis-ci.org/sjinks/qsparsehash.png?branch=master)](https://travis-ci.org/sjinks/qsparsehash)
 
-A small Qt wrapper for [Google sparse_hash_map](https://code.google.com/p/sparsehash/) (and dense_hash_map also).
+A small Qt wrapper for [Google `sparse_hash_map` and `dense_hash_map`](https://code.google.com/p/sparsehash/).
 
-**Installation**
+## Installation
 
-The wrapper itself is a single C++ header file (qsparsehash.h). Just include it to your project.
+Add this code to your `.pro` file:
 
-**Compatibility**
+```
+INCLUDEPATH += /path/to/qsparsehash
+DEPENDPATH  += /path/to/qsparsehash
+```
 
-QSparseHash is tested with Qt 4.8, Qt 5.0 and sparsehash 1.10/2.0.2. It may work with older versions, but I have not tested it.
+and `#include` the files you need from your Qt code:
 
-**How to use**
+```c++
+#include <QSparseHash> // if you need QSparseHash
+#include <QDenseHash>  // if you need QDenseHash
+```
 
-QSparseHash class derives from sparse_hash_map (QDenseHash derives dense_hash_map), so it's 100% API compatible with the original Google implementation. But it also has some methods to be partially compatible with QHash (to be used as a drop-in QHash replacement). Also keep in mind that QSparseHash has QHash-incompatible iterators, there's a bit different syntax (see example below).
+## Compatibility
 
-**Examples**
+QSparseHash is tested with Qt 4.8, Qt 5.0 and sparsehash 2.0.2 (will probably work with sparsehash 1.10).
+It may work with older versions of Qt / qsparsehash but this has not been tested.
 
-Creating, inserting and removing values:
+## How to use
 
-    QSparseHash<QString, int> hash;
-    hash.insert("foo", 1);
-    hash.insert("bar", 2);
-    hash["baz"] = 3;
-    // accessing values
-    printf("baz: %d\n", hash["baz"]);
-    // removing
-    hash.set_deleted_key(""); // if you remove items from hash, you must set deleted_key
-    hash.remove("foo");
-    printf("count: %d\n", hash.count());
+QSparseHash and QDenseHash thrive to be compatible with Qt's QHash class so that they can be used as drop-in replacements.
+However, there are a few gotchas:
+* neither `sparse_hash_map` nor `dense_hash_map` support non-unique keys; this means that `insertMulti()` method won't work as expected; currently it displays a warning message and behaves like `insert()`.
+* both QSparseHash and QDenseHash have a notion of a "deleted key" [[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] [[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)].
+In brief, if you want to remove something from the hash, you must set the deleted key (using either `set_deleted_key()` method
+or by invoking a constructor which takes the deleted key as its argument).
+The deleted key should be a key that is **never** used for legitimate hash-map entries.
+It is an error to call `remove()` (or any other method that invokes `remove()`) without first setting the deleted key,
+and it is also an error to call `insert()` with an item whose key is the "deleted key".
+* QDenseHash has a notion of an '[empty key](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)'.
+The empty key should be a key that is **never** used for legitimate hash-map entries. It **must** be different from the key used for the deleted key.
+It is an error to call `insert()` with an item whose key is the "empty key".
+
+## Examples
+
+**Creating, inserting and removing values:**
+
+```c++
+QSparseHash<QString, int> hash;
+hash.insert("foo", 1);
+hash.insert("bar", 2);
+hash["baz"] = 3;
+
+// accessing values
+qDebug("baz: %d", hash["baz"]);
+
+// removing
+hash.set_deleted_key(""); // if you remove items from hash, you must set the deleted key
+hash.remove("foo");
+qDebug("Number of elements in the hash: %u", hash.count());
+```
+
+**Iterating over the hash:**
+
+```c++
+QSparseHash<QString, int> hash;
+hash.insert("foo", 1);
+hash.insert("bar", 2);
+QSparseHash<QString, int>::const_iterator i = hash.begin();
+while (i != hash.end()) {
+    qDebug("%s: %d", qPrintable(i.key()), i.value());
+    ++i;
+}
+```
     
-Iterating over the hash:
+**Check if the hash contains a key:**
 
-    QSparseHash<QString, int> hash;
-    hash.insert("foo", 1);
-    hash.insert("bar", 2);
-    QSparseHash<QString, int>::const_iterator i = hash.begin();
-    while (i != hash.end()) {
-        printf("%s: %d\n", qPrintable(i->first), i->second); // iterator points to std::pair<Key,Value>
-        i++;
-    }
-    
-Does the hash contain a key?
+```c++
+QSparseHash<QString, int> hash;
+hash.insert("foo", 1);
+hash.insert("bar", 2);
+if (hash.contains("baz")) {
+    qDebug("hash contains baz");
+}
 
-    QSparseHash<QString, int> hash;
-    hash.insert("foo", 1);
-    hash.insert("bar", 2);
-    if (hash.contains("baz"))
-        printf("hash contains baz\n");
-    if (hash.contains("foo"))
-        printf("hash contains foo\n);
-        
-Dense hash example:
+if (hash.contains("foo")) {
+    qDebug("hash contains foo");
+}
+```
 
-    QDenseHash<QString, int> hash; 
-    hash.set_empty_key(""); // going to use "" as empty_key
-    hash.set_deleted_key("!"); // empty_key must not match deleted_key
-    hash.insert("foo", 1);
-    hash.insert("bar", 2);
-    hash.remove("bar");
-    printf("foo: %d\n", hash["foo"]);
-        
-**More documentation**
+**Dense hash example:**
+
+```c++
+QDenseHash<QString, int> hash("" /* empty key */, "!" /* deleted key */); 
+hash.insert("foo", 1);
+hash.insert("bar", 2);
+hash.remove("bar");
+qDebug("foo: %d", hash["foo"]);
+```
+
+## More documentation
 
 You may also be interested in these external docs:
 * [Google sparsehash](http://sparsehash.googlecode.com/svn/trunk/doc/index.html);
-* [Qt's QHash](http://qt-project.org/doc/qt-4.8/qhash.html);
-* QHash, sparsehash, boost:unordered_map, std::unordered_map, ruby & python maps [benchmark](http://blog.aggregateknowledge.com/2011/11/27/big-memory-part-3-5-google-sparsehash/).
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/cc1d27670ad5e06db4bf70ce51adc384 "githalytics.com")](http://githalytics.com/shuttie/qsparsehash)
+* [QHash 4.8](http://qt-project.org/doc/qt-4.8/qhash.html), [QHash 5.0](http://qt-project.org/doc/qt-5.0/qtcore/qhash.html);
+* QHash, sparsehash, boost::unordered_map, std::unordered_map, ruby & python maps [benchmark](http://blog.aggregateknowledge.com/2011/11/27/big-memory-part-3-5-google-sparsehash/).
