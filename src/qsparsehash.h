@@ -11,8 +11,16 @@ namespace {
 }
 
 template<typename Key, typename T, typename H = qHashWrapper<Key> >
-class QSparseHash: public QGoogleHash<SparseHashMap<Key, T, H>, Key, T>
-{
+class QSparseHash: public QGoogleHash<SparseHashMap<Key, T, H>, Key, T> {
+public:
+    QSparseHash(void)
+    {
+    }
+
+    QSparseHash(const Key& deleted)
+    {
+        this->set_deleted_key(deleted);
+    }
 };
 
 Q_DECLARE_ASSOCIATIVE_ITERATOR(SparseHash)
