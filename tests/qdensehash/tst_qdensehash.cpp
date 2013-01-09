@@ -117,18 +117,19 @@ typedef QDenseHash<QString, MyClass> MyMap;
 //void tst_QMap::count()
 void tst_QDenseHash::count()
 {
+// QCOMPARE( MyClass::count, XXX ) won't work because of preallocation used by dense_hash_map
     {
         MyMap map;
         MyMap map2( map );
         QCOMPARE( map.count(), 0 );
         QCOMPARE( map2.count(), 0 );
-        QCOMPARE( MyClass::count, 0 );
+//        QCOMPARE( MyClass::count, 0 );
         // detach
         map2["Hallo"] = MyClass( "Fritz" );
         QCOMPARE( map.count(), 0 );
         QCOMPARE( map2.count(), 1 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 1 );
+//        QCOMPARE( MyClass::count, 1 );
 #endif
     }
     QCOMPARE( MyClass::count, 0 );
@@ -159,68 +160,68 @@ void tst_QDenseHash::count()
 
         QCOMPARE( map.count(), 9 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 9 );
+//        QCOMPARE( MyClass::count, 9 );
 #endif
 
         Map map2( map );
         QVERIFY( map2.count() == 9 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 9 );
+//        QCOMPARE( MyClass::count, 9 );
 #endif
 
         map2.insert( "Kay", MyClass("Roemer") );
         QVERIFY( map2.count() == 10 );
         QVERIFY( map.count() == 9 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 19 );
+//        QCOMPARE( MyClass::count, 19 );
 #endif
 
         map2 = map;
         QVERIFY( map.count() == 9 );
         QVERIFY( map2.count() == 9 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 9 );
+//        QCOMPARE( MyClass::count, 9 );
 #endif
 
         map2.insert( "Kay", MyClass("Roemer") );
         QVERIFY( map2.count() == 10 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 19 );
+//        QCOMPARE( MyClass::count, 19 );
 #endif
 
         map2.clear();
         QVERIFY( map.count() == 9 );
         QVERIFY( map2.count() == 0 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 9 );
+//        QCOMPARE( MyClass::count, 9 );
 #endif
 
         map2 = map;
         QVERIFY( map.count() == 9 );
         QVERIFY( map2.count() == 9 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 9 );
+//        QCOMPARE( MyClass::count, 9 );
 #endif
 
         map2.clear();
         QVERIFY( map.count() == 9 );
         QVERIFY( map2.count() == 0 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 9 );
+//        QCOMPARE( MyClass::count, 9 );
 #endif
 
         map.remove( "Lars" );
         QVERIFY( map.count() == 8 );
         QVERIFY( map2.count() == 0 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 8 + 1); // Elements are not removed, default constructed values will be used
+//        QCOMPARE( MyClass::count, 8 + 1); // Elements are not removed, default constructed values will be used
 #endif
 
         map.remove( "Mist" );
         QVERIFY( map.count() == 8 );
         QVERIFY( map2.count() == 0 );
 #ifndef Q_CC_SUN
-        QCOMPARE( MyClass::count, 8 + 1);
+//        QCOMPARE( MyClass::count, 8 + 1);
 #endif
     }
     QVERIFY( MyClass::count == 0 );
@@ -230,21 +231,21 @@ void tst_QDenseHash::count()
          Map map;
          map["Torben"] = MyClass("Weis");
 #ifndef Q_CC_SUN
-         QVERIFY( MyClass::count == 1 );
+//         QVERIFY( MyClass::count == 1 );
 #endif
          QVERIFY( map.count() == 1 );
 
          (void)map["Torben"].str;
          (void)map["Lars"].str;
 #ifndef Q_CC_SUN
-         QVERIFY( MyClass::count == 2 );
+//         QVERIFY( MyClass::count == 2 );
 #endif
          QVERIFY( map.count() == 2 );
 
          const Map& cmap = map;
          (void)cmap["Depp"].str;
 #ifndef Q_CC_SUN
-         QVERIFY( MyClass::count == 2 );
+//         QVERIFY( MyClass::count == 2 );
 #endif
          QVERIFY( map.count() == 2 );
          QVERIFY( cmap.count() == 2 );
@@ -253,7 +254,7 @@ void tst_QDenseHash::count()
     {
         for ( int i = 0; i < 100; ++i )
         {
-            QDenseHash<int, MyClass> map;
+            QDenseHash<int, MyClass> map(-1);
             for (int j = 0; j < i; ++j)
                 map.insert(j, MyClass(QString::number(j)));
         }
