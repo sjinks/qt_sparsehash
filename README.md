@@ -1,6 +1,6 @@
 # QSparseHash [![Build Status](https://travis-ci.org/sjinks/qsparsehash.png?branch=master)](https://travis-ci.org/sjinks/qsparsehash)
 
-A small Qt wrapper for [Google `sparse_hash_map` and `dense_hash_map`](https://code.google.com/p/sparsehash/).
+A Qt wrapper for [sparsehash](https://code.google.com/p/sparsehash/)'s `sparse_hash_map` and `dense_hash_map`.
 
 ## Installation
 
@@ -26,7 +26,7 @@ It may work with older versions of Qt / qsparsehash but this has not been tested
 ## How to use
 
 QSparseHash and QDenseHash thrive to be compatible with Qt's QHash class so that they can be used as drop-in replacements.
-However, there are a few gotchas:
+However, there are a few pecularities:
 * neither `sparse_hash_map` nor `dense_hash_map` support non-unique keys; this means that `insertMulti()` method won't work as expected; currently it displays a warning message and behaves like `insert()`.
 * both QSparseHash and QDenseHash have a notion of a "deleted key" [[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] [[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)].
 In brief, if you want to remove something from the hash, you must set the deleted key (using either `set_deleted_key()` method
