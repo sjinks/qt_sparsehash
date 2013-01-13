@@ -286,7 +286,7 @@ public:
 
     QGoogleHash<Container, Key, T>& unite(const QGoogleHash<Container, Key, T>& other)
     {
-        this->insert(other.begin(), other.end());
+        this->d->insert(other.d->begin(), other.d->end());
         return *this;
     }
 
