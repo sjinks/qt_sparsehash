@@ -237,6 +237,9 @@ public:
     QList<Key> keys() const
     {
         QList<Key> result;
+#if QT_VERSION >= 0x040700
+        result.reserve(this->d->size());
+#endif
         typename Container::const_iterator it = this->d->begin();
         while (it != this->d->end()) {
             result.append(it->first);
@@ -321,7 +324,7 @@ public:
     }
 
     reference operator[](const Key& key)      { return this->d->operator[](key); }
-    const T	operator[](const Key & key) const { return this->value(key); }
+    const T operator[](const Key & key) const { return this->value(key); }
     bool operator!=(const QGoogleHash<Container, Key, T>& other) const { return *(this->d) != *(other.d); }
     bool operator==(const QGoogleHash<Container, Key, T>& other) const { return *(this->d) == *(other.d); }
 
