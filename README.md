@@ -115,8 +115,9 @@ hash.remove("bar");
 qDebug("foo: %d", hash["foo"]);
 ```
 
-## More documentation
+## More Documentation
 
 * [sparsehash](http://sparsehash.googlecode.com/svn/trunk/doc/index.html);
 * [QHash 4.8](http://qt-project.org/doc/qt-4.8/qhash.html), [QHash 5.0](http://qt-project.org/doc/qt-5.0/qtcore/qhash.html);
-* QHash, sparsehash, boost::unordered_map, std::unordered_map, ruby and python maps [benchmark](http://blog.aggregateknowledge.com/2011/11/27/big-memory-part-3-5-google-sparsehash/).
+* [QSet 4.8](http://qt-project.org/doc/qt-4.8/qset.html), [QSet 5.0](http://qt-project.org/doc/qt-5.0/qtcore/qset.html);
+* QHash, sparsehash, boost::unordered_map, std::unordered_map, Ruby and Python maps [benchmark](http://blog.aggregateknowledge.com/2011/11/27/big-memory-part-3-5-google-sparsehash/).
