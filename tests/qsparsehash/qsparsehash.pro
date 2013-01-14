@@ -5,3 +5,5 @@ SOURCES = tst_qsparsehash.cpp
 DESTDIR = ../
 
 INCLUDEPATH += ../../src ../../
+
+include(../common.pri)

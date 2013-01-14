@@ -2,5 +2,7 @@ TEMPLATE = subdirs
 SUBDIRS += \
     qdensehash \
     qsparsehash \
-    qdenseset
+    qdenseset \
+    qsparseset
+
 

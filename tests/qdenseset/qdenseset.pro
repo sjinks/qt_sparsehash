@@ -9,3 +9,5 @@ INCLUDEPATH += ../../src ../../
 *g++* {
 	QMAKE_CXXFLAGS += -fno-strict-aliasing
 }
+
+include(../common.pri)
