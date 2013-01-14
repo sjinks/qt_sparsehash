@@ -44,10 +44,13 @@ and it is also an error to call `insert()` with an item whose key is the "delete
 * QDenseHash has a notion of an '[empty key](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)'.
 The empty key should be a key that is **never** used for legitimate hash-map entries. It **must** be different from the key used for the deleted key.
 It is an error to call `insert()` with an item whose key is the "empty key".
+* sparsehash's iterators are [forward iterators](http://en.cppreference.com/w/cpp/concept/ForwardIterator),
+QHash's iterators are [bidirectional iterators](http://en.cppreference.com/w/cpp/concept/BidirectionalIterator).
+Therefore iteration over a QSparseHash/QDenseHash in reverse direction may incur severe performance penalties.
 
 ## Examples
 
-**Creating, inserting and removing values:**
+**Creation, insertion and removal of values:**
 
 ```c++
 QSparseHash<QString, int> hash;
@@ -64,7 +67,7 @@ hash.remove("foo");
 qDebug("Number of elements in the hash: %u", hash.count());
 ```
 
-**Iterating over the hash:**
+**Iteration over the hash:**
 
 ```c++
 QSparseHash<QString, int> hash;
