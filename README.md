@@ -2,6 +2,8 @@
 
 A Qt wrapper for [sparsehash](https://code.google.com/p/sparsehash/)'s `sparse_hash_map` and `dense_hash_map`.
 
+Initially this was a fork of https://github.com/shuttie/qsparsehash but in attempts to make the interfaces compatible with Qt the entire code was rewritten.
+
 ## Installation
 
 Add this code to your `.pro` file:
