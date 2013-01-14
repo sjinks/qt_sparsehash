@@ -12,6 +12,7 @@ public:
     class iterator {
         typename Container::iterator m_it;
         Container* m_c;
+        friend class const_iterator;
         friend class QGoogleSet;
     public:
         typedef std::bidirectional_iterator_tag     iterator_category;
@@ -20,10 +21,11 @@ public:
         typedef typename Container::pointer         pointer;
         typedef typename Container::reference       reference;
 
+        iterator(void) : m_it(), m_c(0) {}
         iterator(typename Container::iterator const& it, Container* c) : m_it(it), m_c(c) {}
 
-        T& operator*() const   { return this->m_it; }
-        T* operator->() const  { return &this->m_it; }
+        const T& operator*() const   { return *this->m_it; }
+        const T* operator->() const  { return &this->m_it; }
 
         bool operator==(const iterator& o) const { return this->m_it == o.m_it; }
         bool operator!=(const iterator& o) const { return this->m_it != o.m_it; }
@@ -88,8 +90,10 @@ public:
         typedef typename Container::const_reference const_reference;
 
         const_iterator(typename Container::const_iterator const& it, const Container* c) : m_it(it), m_c(c) {}
+        const_iterator(const iterator& it) : m_it(it.m_it), m_c(it.m_c) {}
+        const_iterator(const const_iterator& it) : m_it(it.m_it), m_c(it.m_c) {}
 
-        const T& operator*() const   { return this->m_it; }
+        const T& operator*() const   { return *this->m_it; }
         const T* operator->() const  { return &this->m_it; }
 
         bool operator==(const const_iterator& o) const { return this->m_it == o.m_it; }
@@ -159,10 +163,7 @@ public:
 
     QGoogleSet<Container, T>& operator=(const QGoogleSet<Container, T>& other)
     {
-        if (this->d != &other.d) {
-            this->d = other.d;
-        }
-
+        this->d = other.d;
         return *this;
     }
 
@@ -189,10 +190,10 @@ public:
     const_iterator cend() const       { return this->end(); }
     const_iterator constEnd() const   { return this->end(); }
 
-    bool contains(const Key& key) const            { return this->d->find(key) != this->d->end(); }
-    const_iterator constFind(const Key& key) const { return const_iterator(this->d->find(key), this->d); }
-    iterator find(const Key& key)                  { return iterator(this->d->find(key), this->d); }
-    const_iterator find(const Key &key) const      { return const_iterator(this->d->find(key), this->d); }
+    bool contains(const T& key) const            { return this->d->find(key) != this->d->end(); }
+    const_iterator constFind(const T& key) const { return const_iterator(this->d->find(key), this->d); }
+    iterator find(const T& key)                  { return iterator(this->d->find(key), this->d); }
+    const_iterator find(const T &key) const      { return const_iterator(this->d->find(key), this->d); }
 
     size_type capacity() const   { return static_cast<size_type>(this->d->bucket_count()); }
     void reserve(int size)       { this->d->resize(size); }
@@ -201,7 +202,7 @@ public:
     bool operator==(const QGoogleSet<Container, T>& other) const { return *(this->d) == *(other.d); }
     bool operator!=(const QGoogleSet<Container, T>& other) const { return *(this->d) != *(other.d); }
 
-    size_type size() const  { return this->count; }
+    size_type size() const  { return this->count(); }
     size_type count() const { return static_cast<size_type>(this->d->size()); }
     bool isEmpty() const    { return this->empty(); }
     bool empty() const      { return this->d->empty(); }
@@ -224,10 +225,6 @@ public:
     iterator insert(const T& value)
     {
         std::pair<typename Container::iterator, bool> res = this->d->insert(value);
-        if (!res.second) {
-            *(res.first) = value;
-        }
-
         return iterator(res.first, this->d);
     }
 
@@ -239,7 +236,7 @@ public:
         return next;
     }
 
-    size_type remove(const Key& key) { return static_cast<size_type>(this->d->erase(key)); }
+    size_type remove(const T& key) { return static_cast<size_type>(this->d->erase(key)); }
 
     QGoogleSet<Container, T>& unite(const QGoogleSet<Container, T>& other)
     {
@@ -271,7 +268,7 @@ public:
         if (this->d != other.d) {
             typename Container::const_iterator i = this->d->begin();
             while (i != this->d->end()) {
-                if (!other.contains(*i)) {
+                if (other.contains(*i)) {
                     this->d->erase(*i);
                 }
 
@@ -306,12 +303,13 @@ public:
     QGoogleSet<Container, T>& operator&=(const QGoogleSet<Container, T>& other) { this->intersect(other); return *this; }
     QGoogleSet<Container, T>& operator&=(const T& value)
     {
-        QGoogleSet<Container, T> result;
-        if (this->contains(value)) {
-            result.insert(value);
+        bool contains = this->contains(value);
+        this->clear();
+        if (contains) {
+            this->insert(value);
         }
 
-        return (*this = result);
+        return *this;
     }
 
     QGoogleSet<Container, T>& operator+=(const QGoogleSet<Container, T>& other) { this->unite(other); return *this; }
@@ -326,7 +324,7 @@ public:
 
     void detach() { /*this->d.detach();*/ }
 
-    void set_deleted_key(const Key& key)
+    void set_deleted_key(const T& key)
     {
         this->d->set_deleted_key(key);
     }
@@ -340,6 +338,76 @@ public:
     friend QDebug operator<<(QDebug dbg, const QGoogleSet<C, K>& ctr);
 };
 
+template<typename Container, typename T>
+class QMutableGoogleSetIterator {
+    typedef typename Container::iterator iterator;
+    Container* c;
+    iterator i, n;
+    bool item_exists() const { return c->constEnd() != n; }
+
+public:
+    QMutableGoogleSetIterator(Container& container)
+        : c(&container)
+    {
+        i = c->begin();
+        n = c->end();
+    }
+
+    ~QMutableGoogleSetIterator() {}
+
+    QMutableGoogleSetIterator& operator=(QMutableGoogleSetIterator& container)
+    {
+        c = &container;
+        i = c->begin();
+        n = c->end();
+        return *this;
+    }
+
+    void toFront() { i = c->begin(); n = c->end(); }
+    void toBack()  { i = c->end(); n = i; }
+
+    bool hasNext() const      { return c->constEnd() != i; }
+    const T& next()           { n = i; ++i; return *n; }
+    const T& peekNext() const { return *i; }
+
+    bool hasPrevious() const      { return c->constBegin() != i; }
+    const T& previous()           { --i; n = i; return *n; }
+    const T& peekPrevious() const { iterator p = i; return *--p; }
+
+    void remove()
+    {
+        if (c->constEnd() != n) {
+            i = c->erase(n);
+            n = c->end();
+        }
+    }
+
+    const T& value() const { return *n; }
+
+    bool findNext(const T& t)
+    {
+        while (c->constEnd() != (n = i)) {
+            if (*i++ == t) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool findPrevious(const T& t)
+    {
+        while (c->constBegin() != i) {
+            if (*(n = --i) == t) {
+                return true;
+            }
+        }
+
+        n = c->end();
+        return false;
+    }
+};
+
 template<class Container, class T>
 QDebug operator<<(QDebug dbg, const QGoogleSet<Container, T>& ctr)
 {
@@ -351,7 +419,7 @@ QDebug operator<<(QDebug dbg, const QGoogleSet<Container, T>& ctr)
         ++it;
     }
 
-    dbg << ")\n";
+    dbg << ")";
     return dbg.space();
 }
 

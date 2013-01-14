@@ -2,7 +2,7 @@
 #define QDENSESET_H
 
 #include <google/dense_hash_set>
-#include "qgooglehash.h"
+#include "qgoogleset.h"
 
 namespace {
     template<typename T, typename H> class DenseHashSet : public google::dense_hash_set<T, H>, public QSharedData
@@ -17,6 +17,8 @@ public:
     {
         this->set_empty_key(T());
     }
+
+    QDenseSet(const QGoogleSet<DenseHashSet<T, H>, T>& other) : QGoogleSet<DenseHashSet<T, H>, T>(other) {}
 
     QDenseSet(const T& empty)
     {
@@ -36,6 +38,12 @@ public:
 };
 
 Q_DECLARE_SEQUENTIAL_ITERATOR(DenseSet)
-Q_DECLARE_MUTABLE_SEQUENTIAL_ITERATOR(DenseSet)
+
+template <typename T>
+class QMutableDenseSetIterator : public QMutableGoogleSetIterator<QDenseSet<T>, T> {
+public:
+    QMutableDenseSetIterator(QDenseSet<T>& container) : QMutableGoogleSetIterator<QDenseSet<T>, T>(container) {}
+};
+
 
 #endif // QDENSESET_H
