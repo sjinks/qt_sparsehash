@@ -45,5 +45,4 @@ public:
     QMutableDenseSetIterator(QDenseSet<T>& container) : QMutableGoogleSetIterator<QDenseSet<T>, T>(container) {}
 };
 
-
 #endif // QDENSESET_H

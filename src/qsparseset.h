@@ -10,20 +10,27 @@ namespace {
     };
 }
 
-template<typename Key, typename T, typename H = qHashWrapper<T> >
+template<typename T, typename H = qHashWrapper<T> >
 class QSparseSet: public QGoogleSet<SparseHashSet<T, H>, T> {
 public:
     QSparseSet(void)
     {
     }
 
-    QSparseSet(const Key& deleted)
+    QSparseSet(const QGoogleSet<SparseHashSet<T, H>, T>& other) : QGoogleSet<SparseHashSet<T, H>, T>(other) {}
+
+    QSparseSet(const T& deleted)
     {
         this->set_deleted_key(deleted);
     }
 };
 
 Q_DECLARE_SEQUENTIAL_ITERATOR(SparseSet)
-Q_DECLARE_MUTABLE_SEQUENTIAL_ITERATOR(SparseSet)
+
+template <typename T>
+class QMutableSparseSetIterator : public QMutableGoogleSetIterator<QSparseSet<T>, T> {
+public:
+    QMutableSparseSetIterator(QSparseSet<T>& container) : QMutableGoogleSetIterator<QSparseSet<T>, T>(container) {}
+};
 
 #endif // QSPARSESET_H
