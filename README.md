@@ -1,6 +1,7 @@
 # qt_sparsehash [![Build Status](https://travis-ci.org/sjinks/qt_sparsehash.png?branch=master)](https://travis-ci.org/sjinks/qt_sparsehash)
 
-A Qt wrapper for [sparsehash](https://code.google.com/p/sparsehash/)'s `sparse_hash_map` and `dense_hash_map`.
+A Qt wrapper for [sparsehash](https://code.google.com/p/sparsehash/)'s `sparse_hash_map`, `sparse_hash_set`,
+`dense_hash_map` and `dense_hash_set`.
 
 Initially this was a fork of https://github.com/shuttie/qsparsehash but in attempts to make the interfaces compatible with Qt the entire code was rewritten.
 
@@ -18,6 +19,8 @@ and `#include` the files you need from your Qt code:
 ```c++
 #include <QSparseHash> // if you need QSparseHash
 #include <QDenseHash>  // if you need QDenseHash
+#include <QSparseSet> // if you need QSparseSet
+#include <QDenseSet>  // if you need QDenseSet
 ```
 
 ## Compatibility
