@@ -1,4 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS += \
     qdensehash \
-    qsparsehash
+    qsparsehash \
+    qdenseset
+
