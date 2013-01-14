@@ -44,8 +44,8 @@ public:
         T& operator*() const   { return this->m_it->second; }
         T* operator->() const  { return &this->m_it->second; }
 
-        bool operator==(const iterator &o) const { return this->m_it == o.m_it; }
-        bool operator!=(const iterator &o) const { return this->m_it != o.m_it; }
+        bool operator==(const iterator& o) const { return this->m_it == o.m_it; }
+        bool operator!=(const iterator& o) const { return this->m_it != o.m_it; }
 
         iterator& operator++()   { ++this->m_it; return *this; }
         iterator operator++(int) { iterator r(*this); ++this->m_it; return r; }
@@ -111,10 +111,10 @@ public:
         const Key& key() const       { return this->m_it->first; }
         const T& value() const       { return this->m_it->second; }
         const T& operator*() const   { return this->m_it->second; }
-        const T* operator->() const  { return &this->m_it->second;; }
+        const T* operator->() const  { return &this->m_it->second; }
 
-        bool operator==(const const_iterator &o) const { return this->m_it == o.m_it; }
-        bool operator!=(const const_iterator &o) const { return this->m_it != o.m_it; }
+        bool operator==(const const_iterator& o) const { return this->m_it == o.m_it; }
+        bool operator!=(const const_iterator& o) const { return this->m_it != o.m_it; }
 
         const_iterator& operator++()   { ++this->m_it; return *this; }
         const_iterator operator++(int) { const_iterator r = *this; ++this->m_it; return r; }
@@ -289,7 +289,10 @@ public:
 
     QGoogleHash<Container, Key, T>& unite(const QGoogleHash<Container, Key, T>& other)
     {
-        this->d->insert(other.d->begin(), other.d->end());
+        if (this->d != other.d) {
+            this->d->insert(other.d->begin(), other.d->end());
+        }
+
         return *this;
     }
 
