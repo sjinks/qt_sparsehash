@@ -23,12 +23,17 @@ and `#include` the files you need from your Qt code:
 QSparseHash is tested with Qt 4.8, Qt 5.0 and sparsehash 2.0.2 (will probably work with sparsehash 1.10).
 It may work with older versions of Qt / qsparsehash but this has not been tested.
 
-## How to use
+## How to Use
 
 QSparseHash and QDenseHash thrive to be compatible with Qt's QHash class so that they can be used as drop-in replacements.
 However, there are a few pecularities:
-* neither `sparse_hash_map` nor `dense_hash_map` support non-unique keys; this means that `insertMulti()` method won't work as expected; currently it displays a warning message and behaves like `insert()`.
-* both QSparseHash and QDenseHash have a notion of a "deleted key" [[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] [[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)].
+* neither `sparse_hash_map` nor `dense_hash_map` support non-unique keys;
+this means that `insertMulti()` method won't work as expected;
+currently it displays a warning message and behaves like `insert()`.
+* as a consequence, `QSparseHash::unite()` and `QDenseHash::unite()` will not work the same way as `QHash::unite()`
+if both hashes contain the same keys: the resulting hash won't have multiple keys: `unite()` just adds missing keys/values
+from the other hash.
+* both QSparseHash and QDenseHash have a notion of a "deleted key" [[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] [[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)].
 In brief, if you want to remove something from the hash, you must set the deleted key (using either `set_deleted_key()` method
 or by invoking a constructor which takes the deleted key as its argument).
 The deleted key should be a key that is **never** used for legitimate hash-map entries.
