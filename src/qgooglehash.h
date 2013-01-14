@@ -1,9 +1,9 @@
 #ifndef QGOOGLEHASH_H
 #define QGOOGLEHASH_H
 
-#include <QtCore/QHash>
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
+#include "qhashwrapper.h"
 
 template<typename Container, typename Key, typename T>
 class QGoogleHash {
@@ -359,15 +359,6 @@ QDebug operator<<(QDebug dbg, const QGoogleHash<Container, Key, T>& ctr)
 
     return dbg.space();
 }
-
-template<typename T>
-class qHashWrapper {
-public:
-    uint operator()(const T& v) const
-    {
-        return qHash(v);
-    }
-};
 
 template<typename Container, typename Key, typename T>
 QDataStream& operator<< (QDataStream& out, const QGoogleHash<Container, Key, T>& hash)
