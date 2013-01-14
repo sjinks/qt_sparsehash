@@ -1,4 +1,4 @@
-# QSparseHash [![Build Status](https://travis-ci.org/sjinks/qsparsehash.png?branch=master)](https://travis-ci.org/sjinks/qsparsehash)
+# qt_sparsehash [![Build Status](https://travis-ci.org/sjinks/qt_sparsehash.png?branch=master)](https://travis-ci.org/sjinks/qt_sparsehash)
 
 A Qt wrapper for [sparsehash](https://code.google.com/p/sparsehash/)'s `sparse_hash_map` and `dense_hash_map`.
 
@@ -9,8 +9,8 @@ Initially this was a fork of https://github.com/shuttie/qsparsehash but in attem
 Add this code to your `.pro` file:
 
 ```
-INCLUDEPATH += /path/to/qsparsehash
-DEPENDPATH  += /path/to/qsparsehash
+INCLUDEPATH += /path/to/qt_sparsehash
+DEPENDPATH  += /path/to/qt_sparsehash
 ```
 
 and `#include` the files you need from your Qt code:
