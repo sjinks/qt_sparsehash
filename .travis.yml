@@ -5,13 +5,13 @@ install:
   - sudo apt-get install libqt4-dev subversion
 
 script:
-  - svn checkout http://sparsehash.googlecode.com/svn/trunk sparsehash-read-only
+  - svn checkout -q http://sparsehash.googlecode.com/svn/trunk sparsehash-read-only
   - cd sparsehash-read-only
   - ./configure
-  - make
+  - make -j2
   - cp -R src/sparsehash ../
   - cp -R src/google ../
   - cd ../tests
   - qmake
-  - make
+  - make -j2
   - for i in ./tst_*; do ./$i; done
