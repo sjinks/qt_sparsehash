@@ -30,6 +30,7 @@ public:
         typename Container::iterator m_it;
         Container* m_c;
         friend class QGoogleHash;
+        friend class const_iterator;
     public:
         typedef std::bidirectional_iterator_tag     iterator_category;
         typedef typename Container::difference_type difference_type;
@@ -107,6 +108,7 @@ public:
         typedef typename Container::const_reference const_reference;
 
         const_iterator(typename Container::const_iterator const& it, const Container* c) : m_it(it), m_c(c) {}
+        const_iterator(const iterator& it) : m_it(it.m_it), m_c(it.m_c) {}
 
         const Key& key() const       { return this->m_it->first; }
         const T& value() const       { return this->m_it->second; }
