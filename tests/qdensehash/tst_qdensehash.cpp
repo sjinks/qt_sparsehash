@@ -74,6 +74,8 @@ private slots:
 
     void const_shared_null();
     void twoArguments_qHash();
+
+    void unite();
 };
 
 struct Foo {
@@ -1308,6 +1310,50 @@ void tst_QDenseHash::twoArguments_qHash()
 //    twoArgsHash4[twoArgsObject4] = 1;
 //    QCOMPARE(wrongqHashOverload, 0);
 */
+}
+
+void tst_QDenseHash::unite()
+{
+    QDenseHash<int, int> h1(-1, -2);
+    QDenseHash<int, int> h2(-1, -2);
+
+    h1.insert(1, 1);
+    h1.insert(2, 2);
+    h1.insert(3, 3);
+
+    h2.insert(1, 1);
+    h2.insert(2, 2);
+    h2.insert(3, 3);
+
+    h1.unite(h1);
+    QCOMPARE(h1, h2);
+
+    h1.unite(h2);
+    QCOMPARE(h1, h2);
+
+    h2.insert(4, 4);
+    h1.unite(h2);
+    QCOMPARE(h1, h2);
+
+    QVERIFY(h1.remove(4));
+    QVERIFY(h1 != h2);
+
+    QVERIFY(h2.remove(3));
+    QVERIFY(h1 != h2);
+
+    h1.unite(h2);
+    QVERIFY(sorted(h1.uniqueKeys()) == (QList<int>() << 1 << 2 << 3 << 4));
+
+    h2.clear();
+    h2.insert(1, 5);
+    h2.insert(2, 6);
+    h2.insert(3, 7);
+    h2.insert(4, 8);
+
+    h1.unite(h2);
+    QVERIFY(sorted(h1.uniqueKeys()) == (QList<int>() << 1 << 2 << 3 << 4));
+    QVERIFY(sorted(h1.values()) == (QList<int>() << 1 << 2 << 3 << 4));
+    QVERIFY(h1 != h2);
 }
 
 QTEST_APPLESS_MAIN(tst_QDenseHash)
