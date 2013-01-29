@@ -25,27 +25,34 @@ and `#include` the files you need from your Qt code:
 
 ## Compatibility
 
-QSparseHash is tested with Qt 4.8, Qt 5.0 and sparsehash 2.0.2 (will probably work with sparsehash 1.10).
+qt_sparsehash is tested with Qt 4.8, Qt 5.0 and sparsehash 2.0.2 (will probably work with sparsehash 1.10).
 It may work with older versions of Qt / qsparsehash but this has not been tested.
 
 ## How to Use
 
-QSparseHash and QDenseHash thrive to be compatible with Qt's QHash class so that they can be used as drop-in replacements.
-However, there are a few pecularities:
+QSparseHash, QDenseHash, QSparseSet and QDenseSet thrive to be compatible with Qt's QHash and QSet classes so that
+they can be used as drop-in replacements. However, there are a few pecularities:
 * neither `sparse_hash_map` nor `dense_hash_map` support non-unique keys;
 this means that `insertMulti()` method won't work as expected;
 currently it displays a warning message and behaves like `insert()`.
 * as a consequence, `QSparseHash::unite()` and `QDenseHash::unite()` will not work the same way as `QHash::unite()`
 if both hashes contain the same keys: the resulting hash won't have multiple keys: `unite()` just adds missing keys/values
 from the other hash.
-* both QSparseHash and QDenseHash have a notion of a "deleted key" [[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] [[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)].
-In brief, if you want to remove something from the hash, you must set the deleted key (using either `set_deleted_key()` method
-or by invoking a constructor which takes the deleted key as its argument).
-The deleted key should be a key that is **never** used for legitimate hash-map entries.
+* QSparseHash, QDenseHash, QSparseSet and QDenseSet have a notion of a "deleted key"
+[[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] 
+[[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)]
+[[3](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_set.html#4)]
+[[4](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_set.html#4)].
+In brief, if you want to remove something from the hash or set, you must set the deleted key 
+(using either `set_deleted_key()` method or by invoking a constructor which takes the deleted key as its argument).
+The deleted key should be a key that is **never** used for legitimate hash map/hash set entries.
 It is an error to call `remove()` (or any other method that invokes `remove()`) without first setting the deleted key,
 and it is also an error to call `insert()` with an item whose key is the "deleted key".
-* QDenseHash has a notion of an '[empty key](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)'.
-The empty key should be a key that is **never** used for legitimate hash-map entries. It **must** be different from the key used for the deleted key.
+* QDenseHash and QDenseSet have a notion of an "empty key"
+[[1](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)]
+[[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_set.html#4)]..
+The empty key should be a key that is **never** used for legitimate hash map/hash set entries.
+It **must** be different from the key used for the deleted key.
 It is an error to call `insert()` with an item whose key is the "empty key".
 * sparsehash's iterators are [forward iterators](http://en.cppreference.com/w/cpp/concept/ForwardIterator),
 QHash's iterators are [bidirectional iterators](http://en.cppreference.com/w/cpp/concept/BidirectionalIterator).
@@ -108,8 +115,9 @@ hash.remove("bar");
 qDebug("foo: %d", hash["foo"]);
 ```
 
-## More documentation
+## More Documentation
 
 * [sparsehash](http://sparsehash.googlecode.com/svn/trunk/doc/index.html);
 * [QHash 4.8](http://qt-project.org/doc/qt-4.8/qhash.html), [QHash 5.0](http://qt-project.org/doc/qt-5.0/qtcore/qhash.html);
-* QHash, sparsehash, boost::unordered_map, std::unordered_map, ruby and python maps [benchmark](http://blog.aggregateknowledge.com/2011/11/27/big-memory-part-3-5-google-sparsehash/).
+* [QSet 4.8](http://qt-project.org/doc/qt-4.8/qset.html), [QSet 5.0](http://qt-project.org/doc/qt-5.0/qtcore/qset.html);
+* QHash, sparsehash, boost::unordered_map, std::unordered_map, Ruby and Python maps [benchmark](http://blog.aggregateknowledge.com/2011/11/27/big-memory-part-3-5-google-sparsehash/).
