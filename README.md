@@ -1,9 +1,9 @@
 # qt_sparsehash [![Build Status](https://travis-ci.org/sjinks/qt_sparsehash.png?branch=master)](https://travis-ci.org/sjinks/qt_sparsehash)
 
 A Qt wrapper for [sparsehash](https://code.google.com/p/sparsehash/)'s `sparse_hash_map`, `sparse_hash_set`,
-`dense_hash_map` and `dense_hash_set`.
+`dense_hash_map`, and `dense_hash_set`.
 
-Initially this was a fork of https://github.com/shuttie/qsparsehash but in attempts to make the interfaces compatible with Qt the entire code was rewritten.
+Initially this was a fork of https://github.com/shuttie/qsparsehash, but in attempts to make the interfaces compatible with Qt, the entire code was rewritten.
 
 ## Installation
 
@@ -25,19 +25,18 @@ and `#include` the files you need from your Qt code:
 
 ## Compatibility
 
-qt_sparsehash is tested with Qt 4.8, Qt 5.0 and sparsehash 2.0.2 (will probably work with sparsehash 1.10).
-It may work with older versions of Qt / qsparsehash but this has not been tested.
+qt_sparsehash is tested with Qt 4.8, Qt 5.0, and sparsehash 2.0.2 (will probably work with sparsehash 1.10).
+It may work with older versions of Qt / qsparsehash, but this has not been tested.
 
 ## How to Use
 
-QSparseHash, QDenseHash, QSparseSet and QDenseSet thrive to be compatible with Qt's QHash and QSet classes so that
+QSparseHash, QDenseHash, QSparseSet, and QDenseSet thrive to be compatible with Qt's QHash and QSet classes so that
 they can be used as drop-in replacements. However, there are a few pecularities:
 * neither `sparse_hash_map` nor `dense_hash_map` support non-unique keys;
 this means that `insertMulti()` method won't work as expected;
 currently it displays a warning message and behaves like `insert()`.
 * as a consequence, `QSparseHash::unite()` and `QDenseHash::unite()` will not work the same way as `QHash::unite()`
-if both hashes contain the same keys: the resulting hash won't have multiple keys: `unite()` just adds missing keys/values
-from the other hash.
+if both hashes contain the same keys: the resulting hash won't have multiple keys because `unite()` just adds missing keys/values from the other hash.
 * QSparseHash, QDenseHash, QSparseSet and QDenseSet have a notion of a "deleted key"
 [[1](http://sparsehash.googlecode.com/svn/trunk/doc/sparse_hash_map.html#6)] 
 [[2](http://sparsehash.googlecode.com/svn/trunk/doc/dense_hash_map.html#6)]
