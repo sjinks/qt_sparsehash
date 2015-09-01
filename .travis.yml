@@ -8,13 +8,16 @@ branches:
   only:
     - master
 
-install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libqt4-dev subversion
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - libqt4-dev
 
 script:
-  - svn checkout -q http://sparsehash.googlecode.com/svn/trunk sparsehash-read-only
-  - cd sparsehash-read-only
+  - git clone https://github.com/google/sparsehash
+  - cd sparsehash
   - ./configure
   - make -j2
   - cp -R src/sparsehash ../
